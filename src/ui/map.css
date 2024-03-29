@@ -1,0 +1,75 @@
+*,
+*::after,
+*::before {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100dvh;
+}
+
+.map {
+	height: 100%;
+	display: grid;
+	grid-template-columns: repeat(6, 300px);
+	grid-template-rows: repeat(6, 300px);
+	gap: 1px;
+	margin-bottom: 40px;
+}
+
+
+.map__item {
+	width: 100%;
+	height: 100%;
+	border: 1px solid #000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: 0.3s;
+}
+
+.map__item__road {
+	background: url('../assets/mapItems/grass.jpg');
+	background-size: cover;
+}
+
+.map__item__wall {
+	background: url('../assets/mapItems/wall.jpg');
+	background-size: cover;
+}
+
+.map__item:hover {
+	position: relative;
+	z-index: 1px;
+}
+
+
+.map__item__wall:hover {
+	border: 10px solid #e61010;
+}
+
+.map__item__road:hover {
+	border: 10px solid #57d46a;
+}
+
+.tooltip__info {
+	position: fixed;
+	max-width: 400px;
+	padding: 20px 0;
+	width: 100%;
+	background-color: rgba(206, 206, 206, 0.7);
+	backdrop-filter: blur(10px);
+	border-radius: 5px;
+	font-size: 24px;
+	
+	text-align: center;
+	top: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.tooltip__info.hidden {
+	display: none;
+}

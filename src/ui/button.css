@@ -1,0 +1,42 @@
+.button {
+	padding: 20px 40px;
+	border-radius: 15px;
+	border: 5px solid transparent;
+	font-size: 22px;
+	transition: 0.3s;
+	text-transform: uppercase;
+}
+
+.button:hover {
+	background-color: rgba(185, 185, 185, 0.7);
+	border: 5px solid #ffffff;
+	color: #000;
+}
+
+.button__openMenu {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+.menu .button {
+	max-width: 200px;
+	width: 100%;
+	background-color: #d9ff00;
+}
+
+/*MENU*/
+.button__start {}
+
+.button__settings {
+}
+.button__exit {
+}
+
+.button__pause {
+	position: fixed;
+	top: 50px;
+	left: 50px;
+	z-index: 4;
+	opacity: 0;
+}

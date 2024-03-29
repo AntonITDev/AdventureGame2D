@@ -1,0 +1,10 @@
+{
+	"1": {
+		"title": "",
+		"countEnemies": 1,
+		"enemies": ["wolf"],
+		"keys": 1,
+		"chests": 1,
+		"map": []
+	}
+}

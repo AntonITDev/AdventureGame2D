@@ -1,0 +1,58 @@
+.player {
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	border: none;
+	position: relative;
+}
+
+.playerAvatar {
+	max-width: 200px;
+
+}
+
+.playerInfo{
+	position: absolute;
+	width: 100%;
+	background-color: #cbcbcb;
+	display: flex;
+	flex-direction: column;
+	font-size: 24px;
+	padding: 20px;
+	top: -100px;
+}
+
+.platerStatus {
+	display: flex;
+	justify-content: space-between;
+	font-size: 16px;
+}
+
+.playerName{}
+
+.playerName::before{
+	content: 'Name: ';
+}
+
+.playerLevel{}
+
+.playerLevel::before{
+	content: 'LVL: ';
+}
+
+.playerAttributes {
+	display: flex;
+	justify-content: space-between;
+}
+
+.playerDamage{}
+
+.playerDamage::before{
+	content: 'DM: ';
+}
+
+.playerHP{}
+
+.playerHP::before{
+	content: 'HP: ';
+}

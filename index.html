@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Adventure: Menu</title>
+	<link rel="stylesheet" href="src/ui/main.css">
+	<link rel="stylesheet" href="src/ui/button.css">
+	<link rel="stylesheet" href="src/ui/main.css">
+	<link rel="stylesheet" href="src/ui/map.css">
+	<link rel="stylesheet" href="src/ui/player.css">
+</head>
+<body>
+	<section class="container">
+		<button class="button__pause button">Pause</button>
+		<div class="menu">
+			<button class="button__start button">start</button>
+			<button class="button__settings button">settings</button>
+			<button class="button__exit button">exit</button>
+		</div>
+
+		<section class="game hidden">
+			<div class="tooltip__info hidden" disabled></div>
+			<section class="map">
+			</section>
+		</section>
+	</section>
+
+	<script src='src/components/game.js' type='module'></script>
+</body>
+</html>
