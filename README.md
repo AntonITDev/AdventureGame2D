@@ -4,18 +4,24 @@
 
 CONTROLS:
 
-MOVE:
-A - left
-D - right
-W - up
-S - bottom
+Move
+* A - left;
+* D - right;
+* W - up;
+* S - bottom;
+
+* ESC - Open menu;
+
 
 
 Features:
-* Settings
-* Enemies
-* Cheasts and keys
-* Random level generation
-* Adaptive for mobile playing
-* Save results
-* Custom change characters
+* Settings;
+* Cheasts and keys;
+* Random level generation;
+* Adaptive for mobile playing;
+* Save results;
+* Custom change characters;
+* Add Battles
+* Inventory
+* Items (Weapon and Armor)
+* Random Market
