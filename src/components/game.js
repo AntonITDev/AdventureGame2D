@@ -1,7 +1,10 @@
 import {drawMap} from "./mapGeneration.js";
 import {getLevel} from './levels/levelController.js';
 import {Player} from './player.js';
+import {Wolf} from './enemies/wolf.js';
 import {openMenu, closeMenu} from './menu.js';
+import {startFight} from './fight.js';
+import {showMessage, closeMessage} from './messages.js';
 
 
 //Menu
@@ -20,8 +23,6 @@ buttonStartGame.addEventListener('click', (e)=> {
 	buttonStartGame.classList.add('start')
 
 	closeMenu(startMenu)
-
-	mapContainer.innerHTML = "";
 	startMenu.classList.add('menu__hidden')
 	gameContainer.classList.remove('hidden')
 	
@@ -42,99 +43,150 @@ buttonExitGame.addEventListener('click', ()=> {
 
 
 //Level
-let level = getLevel(0)
+let stage = 0
+let level = getLevel(stage)
 let levelData = level['data']
+let levelExists = level['exists']
 
 
 //Player
-const playerData = Player('NoNameNoName', "src/assets/mapItems/playerAvatar.png", levelData[3], levelData[0], levelData[1])
+const playerData = Player('NoNameNoName', "src/assets/mapItems/playerAvatar.png", levelData[0], levelData[1], levelData[2])
+let playerObject = playerData.createObject()
 
-let playerObject = playerData.createPlayer()
+//Enemy
 
+const EnemiesArray = []
+const mapEnemyCoordinates = []
+
+function spawnEnemyWolf(count) {
+
+	let enemyPositions = [mapRoadsCoordinates[1], mapRoadsCoordinates[5], mapRoadsCoordinates[10]]
+	let levels = [3, 7, 12]
+	for (let i = 0; i < count; i++) {
+		const enemy = Wolf('Wolf', levels[i], enemyPositions[i][0], enemyPositions[i][1], enemyPositions[i][2])
+	
+		EnemiesArray.push(enemy)
+		mapEnemyCoordinates.push(enemyPositions[i])
+	}
+
+	EnemiesArray.forEach(enemy => {
+		mapContainer.children[enemy.getPosZ()].append(enemy.createObject())
+	})
+}
 
 //Game data
-let mapRoads = [];
+let mapItems = [];
+let mapRoadsCoordinates = [];
+
+function restartMap() {
+	mapContainer.innerHTML = '';
+	playerData.setPosX(levelData[0]);
+	playerData.setPosY(levelData[1]);
+	playerData.setPosZ(levelData[2]);
+	mapItems.splice(0, mapItems.length)
+	mapRoadsCoordinates.splice(0, mapRoadsCoordinates.length)
+	EnemiesArray.splice(0, EnemiesArray.length)
+	mapEnemyCoordinates.splice(0, mapEnemyCoordinates.length)
+	stage = 0
+}
 
 function start() {
 	buttonPauseGame.style.opacity = "1";
 	buttonStartGame.textContent = 'restart';
 
-	playerData.setPosX(levelData[1]);
-	playerData.setPosY(levelData[0]);
-	mapRoads.splice(0, mapRoads.length)
+	restartMap()
 
-	mapRoads = drawMap(mapContainer, level['map'])
-	mapContainer.children[levelData[2]].append(playerObject)
+	let mapData = drawMap(mapContainer, level['map'])
+	mapItems = mapData['mapMatrix']
+	mapRoadsCoordinates = mapData['roadsCoordinates']
+	mapContainer.children[playerData.getPosZ()].append(playerObject)
+
+	spawnEnemyWolf(3)
 }
 
 function exit() {
+	buttonPauseGame.style.opacity = "0";
 	buttonStartGame.classList.remove('start')
 	gameContainer.classList.add('hidden')
 	buttonStartGame.textContent = "start";
 }
 
+function isWall(posX, posY) {
+	if (mapItems[posX][posY].classList.contains('map__item__wall')) { 
+		showMessage(tooltipInfo, "Стена")
+		return true 
+	}
+
+	return false
+}
+
+function isEnemy() {
+	EnemiesArray.forEach(enemy => {
+		if (playerData.getPosZ() == enemy.getPosZ()) {
+			showMessage(tooltipInfo, "Враг")
+			return true
+		}
+	})
+
+	return false
+}
+
+function isExit() {
+	if ([0,1,2].includes(levelExists[playerData.getPosZ()])) {
+		leaveLevel(levelExists[playerData.getPosZ()])
+	}
+}
+
+function changePlayerPositionZ() {
+	let mapItems = mapContainer.querySelectorAll('.map__item')
+
+	for (let i = 0; i < mapItems.length; i++) {
+		if (mapItems[i].contains(playerObject)) {
+			playerData.setPosZ(i)
+		}
+	}
+}
+
+function leaveLevel(LevelNumber) {
+	showMessage(tooltipInfo, 'Выход')
+	stage = LevelNumber
+	level = getLevel(stage)
+	levelData = level['data']
+	levelExists = level['exists']
+	start()
+}
+
 //Move events
 document.addEventListener('keydown', (e)=> {
+	
+	if (e.code == 'Escape') {
+		if (gameContainer.classList.contains("hidden")) {return}
+
+		if (startMenu.classList.contains('menu__hidden')) {
+			openMenu(startMenu)
+		} else {
+			closeMenu(startMenu)
+		}
+	}
 
 	if (!startMenu.classList.contains('menu__hidden')) {return}
 
 	if (!buttonStartGame.classList.contains('start')) {return}
 
-	tooltipInfo.classList.add('hidden')
+	closeMessage(tooltipInfo)
 
-	if (e.code == 'KeyA') {
-		playerObject.querySelector(".playerAvatar").style.transform = "rotateY(180deg)";
-		if (playerData.direction != 'l') {playerData.changeDirection('l')}
-
-		if(playerData.getPosX() - 1 < 0) {return}
-		if (mapRoads[playerData.getPosY()][playerData.getPosX() - 1].classList.contains('map__item__wall')) {
-			tooltipInfo.textContent = "Стена"
-			tooltipInfo.classList.remove('hidden')
-			return 
-		}
-
-		playerData.setPosX(playerData.getPosX() - 1);
-		mapRoads[playerData.getPosY()][playerData.getPosX()].append(playerObject)
-	} else if (e.code == 'KeyD') {
-		playerObject.querySelector(".playerAvatar").style.transform = "rotateY(0deg)";
-		if (playerData.direction != 'r') {playerData.changeDirection('r')}
-
-		if(playerData.getPosX() + 1 == mapRoads[playerData.getPosY()].length) {return}
-		if (mapRoads[playerData.getPosY()][playerData.getPosX() + 1].classList.contains('map__item__wall')) {
-			tooltipInfo.textContent = "Стена"
-			tooltipInfo.classList.remove('hidden')
-			return 
-		}
-
-		playerData.setPosX(playerData.getPosX() + 1);
-		mapRoads[playerData.getPosY()][playerData.getPosX()].append(playerObject)
-	} else if (e.code == 'KeyW') {
-		if (playerData.direction != 't') {playerData.changeDirection('t')}
-
-		if(playerData.getPosY() - 1 < 0) {return}
-
-		if (mapRoads[playerData.getPosY() - 1][playerData.getPosX()].classList.contains('map__item__wall')) {
-			tooltipInfo.textContent = "Стена"
-			tooltipInfo.classList.remove('hidden')
-			return 
-		}
-
-		playerData.setPosY(playerData.getPosY() - 1);
-		mapRoads[playerData.getPosY()][playerData.getPosX()].append(playerObject)
-
-	} else if (e.code == 'KeyS') {
-		if (playerData.direction != 'b') {playerData.changeDirection('b')}
-
-		if(playerData.getPosY() + 1 == mapRoads.length) {return}
-		if (mapRoads[playerData.getPosY() + 1][playerData.getPosX()].classList.contains('map__item__wall')) {
-			tooltipInfo.textContent = "Стена"
-			tooltipInfo.classList.remove('hidden')
-			return 
-		}
-
-		playerData.setPosY(playerData.getPosY() + 1);
-		mapRoads[playerData.getPosY()][playerData.getPosX()].append(playerObject)
+	if (e.code == "KeyE") {
+		if (isEnemy()) {return}
+		else if (isExit()) {return}
+		
 	}
+
+	if (e.code == 'KeyA') { playerData.moveLeft(playerObject, mapItems, isWall)} 
+	else if (e.code == 'KeyD') { playerData.moveRight(playerObject, mapItems, isWall)} 
+	else if (e.code == 'KeyW') { playerData.moveTop(playerObject, mapItems, isWall)} 
+	else if (e.code == 'KeyS') { playerData.moveBottom(playerObject, mapItems, isWall)}
+
+	changePlayerPositionZ()
 })
 
 

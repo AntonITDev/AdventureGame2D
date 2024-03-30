@@ -1,17 +1,18 @@
-.player {
+.enemy {
 	width: 100%;
 	height: 100%;
 	background-size: cover;
 	border: none;
 	position: relative;
+	display: flex;
+	justify-content: center;
 	z-index: 2;
 }
 
-.playerAvatar {
-	max-width: 200px;
+.enemyAvatar {
 }
 
-.playerInfo{
+.enemyInfo{
 	position: absolute;
 	width: 300px;
 	background-color: rgba(240, 240, 240, 0.8);
@@ -19,47 +20,47 @@
 	flex-direction: column;
 	font-size: 24px;
 	padding: 20px;
-	bottom: -20px;
+	bottom: 0;
 	border-radius: 10px;
-	opacity: 0;
 	transition: 0.3s;
+	opacity: 0;
 }
 
-.playerAvatar:hover + .playerInfo {
+.enemyAvatar:hover + .enemyInfo {
 	opacity: 1;
 }
 
-.platerStatus {
+.enemyStatus {
 	display: flex;
 	justify-content: space-between;
 	font-size: 16px;
 }
 
-.playerName{}
+.enemyName{}
 
-.playerName::before{
+.enemyName::before{
 	content: 'Name: ';
 }
 
-.playerLevel{}
+.enemyLevel{}
 
-.playerLevel::before{
+.enemyLevel::before{
 	content: 'LVL: ';
 }
 
-.playerAttributes {
+.enemyAttributes {
 	display: flex;
 	justify-content: space-between;
 }
 
-.playerDamage{}
+.enemyDamage{}
 
-.playerDamage::before{
+.enemyDamage::before{
 	content: 'DM: ';
 }
 
-.playerHP{}
+.enemyHP{}
 
-.playerHP::before{
+.enemyHP::before{
 	content: 'HP: ';
 }

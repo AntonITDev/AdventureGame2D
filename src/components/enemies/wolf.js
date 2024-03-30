@@ -1,46 +1,61 @@
-export function Wolf(name, avatar, direction, startPosX, startPosY) {
+export function Wolf(name, level,startPosX, startPosY, startPosZ) {
 	let player = {
 		"name": name,
-		"level": 0,
-		"HP": 100,
-		"Damage": 5,
-		"EXP": 0,
-		"nextLevelExp": 100,
-		"avatar": avatar,
-		"direction": direction,
+		"level": level,
+		"HP": NaN,
+		"Damage": NaN,
+		"EXP": NaN,
+		"avatar": NaN,
 		"posX": startPosX,
 		"posY": startPosY,
-	
-		renameName(newName) {
-			this.name = newName
+		"posZ": startPosZ,
+
+		getPosX() { return this.posX },
+
+		getPosY() { return this.posY },
+
+		getPosZ() { return this.posZ },
+
+		setPosX(NewPositionX) { this.posX = NewPositionX },
+		setPosY(NewPositionY) { this.posY = NewPositionY },
+		setPosZ(NewPositionZ) { this.posZ = NewPositionZ },
+
+		setAvatar() {
+			this.avatar = this.level < 10 ? 'src/assets/enemies/wolfs/wolf__common.png' : 'src/assets/enemies/wolfs/wolf__rare.png'
 		},
 
-		getPosX() {
-			return this.posX
+		setExp() {
+			this.exp = this.level * 25
 		},
 
-		getPosY() {
-			return this.posY
+		setDamage() {
+			this.Damage = this.level * 5
 		},
 
-		setPosX(NewPositionX) {
-			this.posX = NewPositionX
+		setHealth() {
+			this.HP = this.level * 10
 		},
-		setPosY(NewPositionY) {
-			this.posY = NewPositionY
-		},
-	
-		createPlayer() {
+
+		createObject() {
 			const playerElement = document.createElement('div')
-			playerElement.classList.add('player')
-	
+			playerElement.classList.add('enemy')
+
+			this.setDamage()
+			this.setHealth()
+			this.setExp()
+			this.setAvatar()
+
 			playerElement.innerHTML = `
-			<img class='playerAvatar' src="${this.avatar}" alt="playerAvatar">
-			<section class='playerInfo'>
-				<h4 class="playerName">${this.name}</h4>
-				<p class="playerLevel">${this.level}</p>
-				<p class="playerDamage">${this.Damage}</p>
-				<p class="playerHP">${this.HP}</p>
+			<img class='enemyAvatar' src="${this.avatar}" alt="enemyAvatar">
+			<section class='enemyInfo'>
+				<section class="enemyStatus">
+					<h4 class="enemyName">${this.name}</h4>
+					<p class="enemyLevel">${this.level}</p>
+				</section>
+				<section class="enemyAttributes">
+					<p class="enemyDamage">${this.Damage}</p>
+					<p class="enemyHP">${this.HP}</p>
+				</section>
 			</section>
 			`.trim()
 	
@@ -49,36 +64,18 @@ export function Wolf(name, avatar, direction, startPosX, startPosY) {
 	
 		updateInfo() {
 			let InfoElements = `
-			<h4 class="playerName">${this.name}</h4>
-			<p class="playerLevel">${this.level}</p>
-			<p class="playerDamage">${this.Damage}</p>
-			<p class="playerHP">${this.HP}</p>
+				<section class="enemyStatus">
+					<h4 class="enemyName">${this.name}</h4>
+					<p class="enemyLevel">${this.level}</p>
+				</section>
+				<section class="enemyAttributes">
+					<p class="enemyDamage">${this.Damage}</p>
+					<p class="enemyHP">${this.HP}</p>
+				</section>
 			`.trim()
 
 			return InfoElements
 		},
-
-		levelUP(exp) {
-			
-			this.EXP += exp; //200
-	
-			if (this.EXP >= this.nextLevelExp) {
-				this.level += 1;
-				this.Damage += 2;
-				this.HP += 10;
-				exp = +(this.nextLevelExp - this.EXP)
-	
-				this.EXP = 0;
-				this.nextLevelExp += this.nextLevelExp * 0.1; //110
-				this.levelUP(exp)
-
-				return true
-			}
-		},
-
-		changeDirection(new_direction) {
-			this.direction = new_direction;
-		}
 	}
 
 	return player
