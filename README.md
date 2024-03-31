@@ -11,6 +11,7 @@ Move
 * S - bottom;
 
 * ESC - Open menu;
+* E - activate
 
 
 
